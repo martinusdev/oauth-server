@@ -17,9 +17,9 @@ interface UserFinderByUserCredentialsInterface
     public function findUser($username, $password): ?EntityInterface;
 
     /**
-     * Get Users repository identity path
+     * Get Users repository primary key
      *
      * @return string
      */
-    public function getUserIdentityPath();
+    public function getPrimaryKey();
 }

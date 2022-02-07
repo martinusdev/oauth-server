@@ -10,7 +10,6 @@ use Cake\Routing\Router;
 use Cake\TestSuite\IntegrationTestCase;
 use OAuthServer\Controller\OAuthController;
 use OAuthServer\Plugin as OAuthServerPlugin;
-use TestApp\AuthenticationServiceProvider;
 use TestApp\Controller\TestAppController;
 
 class OAuthControllerTest extends IntegrationTestCase
@@ -44,13 +43,6 @@ class OAuthControllerTest extends IntegrationTestCase
 
             $route->fallbacks();
         });
-
-        $authenticationServiceProvider = new AuthenticationServiceProvider();
-        $this->configRequest([
-            'attributes' => [
-                'authentication' => $authenticationServiceProvider->getAuthenticationService(new ServerRequest()),
-            ],
-        ]);
     }
 
     public function tearDown(): void
@@ -108,8 +100,7 @@ class OAuthControllerTest extends IntegrationTestCase
 
         $this->get($authorizeUrl);
 
-        // cakephp/authentication plugin does not absolute( `fullBase` ) url
-        $this->assertRedirectContains(Router::url(['plugin' => false, 'controller' => 'Users', 'action' => 'login', '?' => ['redirect' => $authorizeUrl], '_full' => false]));
+        $this->assertRedirect(['plugin' => false, 'controller' => 'Users', 'action' => 'login', '?' => ['redirect' => $authorizeUrl]]);
     }
 
     public function testAuthorizeInvalidClientId()
@@ -249,9 +240,7 @@ class OAuthControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
         $response = $this->grabResponseJson();
         $this->assertSame('Bearer', $response['token_type']);
-        // Allow 5 seconds difference
-        $this->assertLessThanOrEqual(3600, $response['expires_in']);
-        $this->assertGreaterThanOrEqual(3595, $response['expires_in']);
+        $this->assertSame(3600, $response['expires_in']);
         $this->assertArrayHasKey('access_token', $response);
         $this->assertArrayHasKey('refresh_token', $response);
 
@@ -265,9 +254,7 @@ class OAuthControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
         $refreshed = $this->grabResponseJson();
         $this->assertSame('Bearer', $refreshed['token_type']);
-        // Allow 5 seconds difference
-        $this->assertLessThanOrEqual(3600, $refreshed['expires_in']);
-        $this->assertGreaterThanOrEqual(3595, $response['expires_in']);
+        $this->assertSame(3600, $refreshed['expires_in']);
         $this->assertArrayHasKey('access_token', $refreshed);
         $this->assertArrayHasKey('refresh_token', $refreshed);
         $this->assertNotEquals($response['access_token'], $refreshed['access_token']);

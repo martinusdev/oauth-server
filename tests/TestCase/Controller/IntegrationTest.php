@@ -6,7 +6,6 @@ namespace OAuthServer\Test\TestCase\Controller;
 use Authentication\Authenticator\ResultInterface;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
-use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
@@ -16,7 +15,6 @@ use League\OAuth2\Server\CryptTrait;
 use OAuthServer\Authenticator\OAuthAuthenticator;
 use OAuthServer\Identifier\OAuthIdentifier;
 use OAuthServer\Plugin as OAuthServerPlugin;
-use TestApp\AuthenticationServiceProvider;
 
 class IntegrationTest extends IntegrationTestCase
 {
@@ -98,14 +96,8 @@ class IntegrationTest extends IntegrationTestCase
     public function testAuthorization()
     {
         // --- 1. Get a authorization code
-        $this->session(['Auth.User' => new Entity(['id' => 'user1'])]);
+        $this->session(['Auth.User.id' => 'user1']);
 
-        $authenticationServiceProvider = new AuthenticationServiceProvider();
-        $this->configRequest([
-            'attributes' => [
-                'authentication' => $authenticationServiceProvider->getAuthenticationService(new ServerRequest()),
-            ],
-        ]);
         $query = ['client_id' => 'TEST', 'redirect_uri' => 'http://www.example.com', 'response_type' => 'code', 'scope' => 'test'];
         $this->post($this->url('/oauth/authorize') . '?' . http_build_query($query), ['authorization' => 'Approve']);
 

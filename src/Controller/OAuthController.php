@@ -30,16 +30,21 @@ class OAuthController extends AppController
         $this->loadComponent('OAuthServer.OAuth', Configure::read('OAuthServer', []));
         $this->loadComponent('RequestHandler');
 
-        if (!$this->components()->has('Authentication')) {
-            throw new RuntimeException(
-                'OAuthServer requires Authentication component to be loaded and properly configured'
-            );
+        if (!$this->components()->has('Auth')) {
+            throw new RuntimeException('OAuthServer requires Auth component to be loaded and properly configured');
         }
 
-        $this->Authentication->addUnauthenticatedActions(['oauth', 'accessToken']);
+        $this->Auth->allow(['oauth', 'accessToken']);
+        $this->Auth->deny(['authorize']);
 
         // if accessToken action, disable CsrfComponent|SecurityComponent
         if ($this->request->getParam('action') === 'accessToken') {
+            // @deprecated 4.0.0 Use FormProtectionComponent instead, for form tampering protection
+            //   or HttpsEnforcerMiddleware to enforce use of HTTPS (SSL) for requests.
+            if ($this->components()->has('Security')) {
+                $this->components()->unload('Security');
+            }
+            // @since 4.0.0
             if ($this->components()->has('FormProtection')) {
                 $this->components()->unload('FormProtection');
             }
@@ -59,7 +64,7 @@ class OAuthController extends AppController
             $this->request->getParam('action') === 'authorize'
             && $this->request->getQuery('prompt') === 'login'
         ) {
-            $this->Authentication->logout();
+            $this->Auth->logout();
 
             $query = $this->request->getQueryParams();
             unset($query['prompt']);
@@ -96,7 +101,7 @@ class OAuthController extends AppController
 
             $this->dispatchEvent('OAuthServer.beforeAuthorize', [$authRequest]);
 
-            $userId = $this->Authentication->getIdentity()->getIdentifier();
+            $userId = $this->Auth->user($this->OAuth->getPrimaryKey());
             if ($userId) {
                 $authRequest->setUser(new User($userId));
             }
@@ -137,7 +142,7 @@ class OAuthController extends AppController
             'client' => $authRequest->getClient(),
             'scopes' => $authRequest->getScopes(),
         ];
-        $user = $this->Authentication->getIdentity();
+        $user = $this->Auth->user();
 
         $this->set(compact('authParams', 'user'));
         $this->viewBuilder()->setOption('serialize', ['authParams', 'user']);
