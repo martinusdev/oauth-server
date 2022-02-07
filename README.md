@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # OAuth2 Server for CakePHP 4
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
@@ -450,3 +451,6 @@ Optional: Specify the user's primary key field.
 default: `id`
 
 more configuration options see: https://book.cakephp.org/3.0/en/controllers/components/authentication.html#configuring-authentication-handlers
+=======
+forked from uafrica/oauth-server
+>>>>>>> 8321a34 (Update README.md)
