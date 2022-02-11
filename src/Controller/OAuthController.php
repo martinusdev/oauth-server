@@ -29,7 +29,17 @@ class OAuthController extends AppController
 
         $this->loadComponent('OAuthServer.OAuth', Configure::read('OAuthServer', []));
         $this->loadComponent('RequestHandler');
+    }
 
+    /**
+     * on Controller.initialize
+     *
+     * @param \Cake\Event\EventInterface $event the event
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeFilter(EventInterface $event): ?Response
+    {
+        // presunul som sem lebo v tomto bode uz mame loadnuty component Auth a nicomu to nevadi
         if (!$this->components()->has('Auth')) {
             throw new RuntimeException('OAuthServer requires Auth component to be loaded and properly configured');
         }
@@ -49,16 +59,7 @@ class OAuthController extends AppController
                 $this->components()->unload('FormProtection');
             }
         }
-    }
 
-    /**
-     * on Controller.initialize
-     *
-     * @param \Cake\Event\EventInterface $event the event
-     * @return \Cake\Http\Response|null
-     */
-    public function beforeFilter(EventInterface $event): ?Response
-    {
         // if prompt=login on authorize action, then logout and remove prompt params
         if (
             $this->request->getParam('action') === 'authorize'

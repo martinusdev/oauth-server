@@ -57,6 +57,8 @@ class ClientRepository implements ClientRepositoryInterface
             return true;
         }
 
+        // Check na grant_type, ktory po novom sa vytahuje z tabulky oauth_clients
+        // v pripade ze nie su pustene migracie toto vrati null, workaround: return true;
         return in_array($grantType, $client->grant_types, true);
     }
 }
