@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace OAuthServer\Controller;
 
+use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\HttpException;
