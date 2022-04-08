@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace OAuthServer\Controller;
 
-use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\HttpException;
@@ -17,7 +16,7 @@ use RuntimeException;
  * Class OAuthController
  *
  * @property \OAuthServer\Controller\Component\OAuthComponent $OAuth
- * @mixin Controller
+ * @mixin \Cake\Controller\Controller
  */
 class OAuthController extends AppController
 {
