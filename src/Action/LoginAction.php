@@ -72,7 +72,7 @@ class LoginAction extends BaseAction
         $this->setFlash('success', $subject);
 
         $redirectUri = $this->_controller()->Authentication->getLoginRedirect();
-        if ($this->_request()->getQuery('redir') == "oauth") {
+        if ($this->_request()->getQuery('redir') == 'oauth') {
             $redirectUri = [
                 'plugin' => 'OAuthServer',
                 'controller' => 'OAuth',
