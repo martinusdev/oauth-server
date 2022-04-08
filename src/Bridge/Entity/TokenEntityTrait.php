@@ -7,7 +7,6 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
 trait TokenEntityTrait
 {
-
     /**
      * {@inheritDoc}
      */
