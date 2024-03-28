@@ -17,7 +17,7 @@ class CleanupTokens extends Shell
     /**
      * @return \Cake\Console\ConsoleOptionParser
      */
-    public function getOptionParser()
+    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
     {
         $parser = parent::getOptionParser();
 
@@ -66,7 +66,7 @@ class CleanupTokens extends Shell
      */
     public function accessTokens()
     {
-        $table = $this->loadModel('OAuthServer.AccessTokens');
+        $table = $this->fetchTable('OAuthServer.AccessTokens');
 
         $this->process($table);
     }
@@ -76,7 +76,7 @@ class CleanupTokens extends Shell
      */
     public function authCodes()
     {
-        $table = $this->loadModel('OAuthServer.AuthCodes');
+        $table = $this->fetchTable('OAuthServer.AuthCodes');
 
         $this->process($table);
     }
@@ -86,7 +86,7 @@ class CleanupTokens extends Shell
      */
     public function refreshTokens()
     {
-        $table = $this->loadModel('OAuthServer.RefreshTokens');
+        $table = $this->fetchTable('OAuthServer.RefreshTokens');
 
         $this->process($table);
     }

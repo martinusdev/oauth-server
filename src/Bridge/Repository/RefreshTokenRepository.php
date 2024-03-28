@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace OAuthServer\Bridge\Repository;
 
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
@@ -15,7 +15,7 @@ use OAuthServer\Model\Entity\RefreshToken;
  */
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use RevokeTokenRepositoryTrait;
 
     /**
@@ -28,7 +28,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function __construct()
     {
-        $this->table = $this->loadModel('OAuthServer.RefreshTokens');
+        $this->table = $this->fetchTable('OAuthServer.RefreshTokens');
     }
 
     /**

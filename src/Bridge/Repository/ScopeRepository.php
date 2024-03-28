@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace OAuthServer\Bridge\Repository;
 
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
 class ScopeRepository implements ScopeRepositoryInterface, EventDispatcherInterface
 {
     use EventDispatcherTrait;
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
      * @var \OAuthServer\Model\Table\OauthScopesTable
@@ -24,7 +24,7 @@ class ScopeRepository implements ScopeRepositoryInterface, EventDispatcherInterf
      */
     public function __construct()
     {
-        $this->table = $this->loadModel('OAuthServer.OauthScopes');
+        $this->table = $this->fetchTable('OAuthServer.OauthScopes');
     }
 
     /**

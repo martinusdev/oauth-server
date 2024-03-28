@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace OAuthServer\Bridge\Repository;
 
-use Cake\Datasource\ModelAwareTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace OAuthServer\Bridge\Repository;
 
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
@@ -12,7 +12,7 @@ use OAuthServer\Model\Entity\AuthCode;
 
 class AuthCodeRepository implements AuthCodeRepositoryInterface
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use RevokeTokenRepositoryTrait;
 
     /**
@@ -25,7 +25,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function __construct()
     {
-        $this->table = $this->loadModel('OAuthServer.AuthCodes');
+        $this->table = $this->fetchTable('OAuthServer.AuthCodes');
     }
 
     /**

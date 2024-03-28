@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace OAuthServer\Bridge\Repository;
 
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -13,7 +13,7 @@ use OAuthServer\Model\Entity\AccessToken;
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use RevokeTokenRepositoryTrait;
 
     /**
@@ -26,7 +26,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function __construct()
     {
-        $this->table = $this->loadModel('OAuthServer.AccessTokens');
+        $this->table = $this->fetchTable('OAuthServer.AccessTokens');
     }
 
     /**
