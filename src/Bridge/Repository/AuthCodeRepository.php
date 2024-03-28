@@ -1,22 +1,22 @@
 <?php
+declare(strict_types=1);
 
 namespace OAuthServer\Bridge\Repository;
 
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use OAuthServer\Model\Entity\AuthCode;
-use OAuthServer\Model\Table\AuthCodesTable;
 
 class AuthCodeRepository implements AuthCodeRepositoryInterface
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use RevokeTokenRepositoryTrait;
 
     /**
-     * @var AuthCodesTable
+     * @var \OAuthServer\Model\Table\AuthCodesTable
      */
     private $table;
 
@@ -25,11 +25,11 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function __construct()
     {
-        $this->table = $this->loadModel('OAuthServer.AuthCodes');
+        $this->table = $this->fetchTable('OAuthServer.AuthCodes');
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getNewAuthCode()
     {
@@ -37,7 +37,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
     {
@@ -53,7 +53,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
                 'expires' => $authCodeEntity->getExpiryDateTime()->getTimestamp(),
                 'scopes' => [],
             ];
-            foreach ($authCodeEntity->getScopes() as $scope) {
+            foreach ($authCodeEntity->getRawScopes() as $scope) {
                 $data['scopes'][] = ['id' => $scope->getIdentifier()];
             }
             $authCodeEntity = $this->table->newEntity($data);
@@ -65,7 +65,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function revokeAuthCode($codeId)
     {
@@ -77,7 +77,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function isAuthCodeRevoked($codeId): bool
     {

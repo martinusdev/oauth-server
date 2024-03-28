@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace OAuthServer\Shell;
 
-use Cake\Console\ConsoleOptionParser;
 use Cake\Console\Shell;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\RepositoryInterface;
@@ -15,9 +15,9 @@ use OAuthServer\Model\Table\RevocableTokensTableInterface;
 class CleanupTokens extends Shell
 {
     /**
-     * @return ConsoleOptionParser
+     * @return \Cake\Console\ConsoleOptionParser
      */
-    public function getOptionParser()
+    public function getOptionParser(): \Cake\Console\ConsoleOptionParser
     {
         $parser = parent::getOptionParser();
 
@@ -66,7 +66,7 @@ class CleanupTokens extends Shell
      */
     public function accessTokens()
     {
-        $table = $this->loadModel('OAuthServer.AccessTokens');
+        $table = $this->fetchTable('OAuthServer.AccessTokens');
 
         $this->process($table);
     }
@@ -76,7 +76,7 @@ class CleanupTokens extends Shell
      */
     public function authCodes()
     {
-        $table = $this->loadModel('OAuthServer.AuthCodes');
+        $table = $this->fetchTable('OAuthServer.AuthCodes');
 
         $this->process($table);
     }
@@ -86,13 +86,13 @@ class CleanupTokens extends Shell
      */
     public function refreshTokens()
     {
-        $table = $this->loadModel('OAuthServer.RefreshTokens');
+        $table = $this->fetchTable('OAuthServer.RefreshTokens');
 
         $this->process($table);
     }
 
     /**
-     * @param RepositoryInterface $table target table
+     * @param \Cake\Datasource\RepositoryInterface $table target table
      * @return void
      */
     private function process(RepositoryInterface $table)

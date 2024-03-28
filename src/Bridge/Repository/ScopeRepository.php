@@ -1,21 +1,21 @@
 <?php
+declare(strict_types=1);
 
 namespace OAuthServer\Bridge\Repository;
 
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
-use OAuthServer\Model\Table\OauthScopesTable;
 
 class ScopeRepository implements ScopeRepositoryInterface, EventDispatcherInterface
 {
     use EventDispatcherTrait;
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
-     * @var OauthScopesTable
+     * @var \OAuthServer\Model\Table\OauthScopesTable
      */
     private $table;
 
@@ -24,11 +24,11 @@ class ScopeRepository implements ScopeRepositoryInterface, EventDispatcherInterf
      */
     public function __construct()
     {
-        $this->table = $this->loadModel('OAuthServer.OauthScopes');
+        $this->table = $this->fetchTable('OAuthServer.OauthScopes');
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getScopeEntityByIdentifier($identifier)
     {
@@ -36,10 +36,14 @@ class ScopeRepository implements ScopeRepositoryInterface, EventDispatcherInterf
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function finalizeScopes(array $scopes, $grantType, ClientEntityInterface $clientEntity, $userIdentifier = null)
-    {
+    public function finalizeScopes(
+        array $scopes,
+        $grantType,
+        ClientEntityInterface $clientEntity,
+        $userIdentifier = null
+    ) {
         $result = $this->dispatchEvent('OAuthServer.finalizeScopes', compact(
             'scopes',
             'grantType',

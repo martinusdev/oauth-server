@@ -12,7 +12,7 @@ sudo: false
 
 env:
   matrix:
-    - CAKE_VERSION='3.10.*'
+    - CAKE_VERSION='4.0.*'
   global:
     - DEFAULT=1 DB=sqlite db_dsn='sqlite:///:memory:'
 

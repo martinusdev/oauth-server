@@ -1,23 +1,23 @@
 <?php
+declare(strict_types=1);
 
 namespace OAuthServer\Bridge\Repository;
 
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use OAuthServer\Model\Entity\AccessToken;
-use OAuthServer\Model\Table\AccessTokensTable;
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use RevokeTokenRepositoryTrait;
 
     /**
-     * @var AccessTokensTable
+     * @var \OAuthServer\Model\Table\AccessTokensTable
      */
     private $table;
 
@@ -26,11 +26,11 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function __construct()
     {
-        $this->table = $this->loadModel('OAuthServer.AccessTokens');
+        $this->table = $this->fetchTable('OAuthServer.AccessTokens');
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
@@ -44,7 +44,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
@@ -60,7 +60,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
                 'expires' => $accessTokenEntity->getExpiryDateTime()->getTimestamp(),
                 'scopes' => [],
             ];
-            foreach ($accessTokenEntity->getScopes() as $scope) {
+            foreach ($accessTokenEntity->getRawScopes() as $scope) {
                 $data['scopes'][] = ['id' => $scope->getIdentifier()];
             }
             $accessTokenEntity = $this->table->newEntity($data);
@@ -72,7 +72,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function revokeAccessToken($tokenId)
     {
@@ -84,7 +84,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function isAccessTokenRevoked($tokenId): bool
     {

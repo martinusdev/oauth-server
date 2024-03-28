@@ -1,21 +1,20 @@
 <?php
+declare(strict_types=1);
 
 namespace OAuthServer\Bridge\Repository;
 
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
-use OAuthServer\Model\Entity\Client;
-use OAuthServer\Model\Table\OauthClientsTable;
 
 /**
  * implemented ClientRepositoryInterface
  */
 class ClientRepository implements ClientRepositoryInterface
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
-     * @var OauthClientsTable
+     * @var \OAuthServer\Model\Table\OauthClientsTable
      */
     private $table;
 
@@ -24,7 +23,7 @@ class ClientRepository implements ClientRepositoryInterface
      */
     public function __construct()
     {
-        $this->table = $this->loadModel('OAuthServer.OauthClients');
+        $this->table = $this->fetchTable('OAuthServer.OauthClients');
     }
 
     /**
@@ -48,7 +47,7 @@ class ClientRepository implements ClientRepositoryInterface
         }
 
         $client = $this->table->find()->where($conditions)->first();
-        /* @var $client Client|null */
+        /** @var \OAuthServer\Bridge\Repository\Client|null $client */
 
         if ($client === null) {
             return false;
